@@ -2,7 +2,10 @@
 #include <cstdlib> // rand, srand
 #include <ctime>   // time
 #include <cmath>   // static_cast, floor
-#include <memory>  // make_unique (dodane dla poprawności kompilacji)
+#include <memory>  // make_unique
+#include <iomanip> // setw (do ladnego wyswietlania)
+
+using namespace std;
 
 // =========================================================
 // KONSTRUKTORY I DESTRUKTOR
@@ -387,14 +390,15 @@ bool matrix::operator<(const matrix& m) {
 }
 
 // =========================================================
-// OPERATOR STRUMIENIOWY
+// OPERATOR STRUMIENIOWY (WYŚWIETLANIE)
 // =========================================================
 
-// Wypisanie macierzy
 ostream& operator<<(ostream& o, matrix& m) {
     for (int i = 0; i < m.n; i++) {
         for (int j = 0; j < m.n; j++) {
-            o << m.pokaz(i, j) << "\t";
+            // Używamy setw(3), żeby liczby zajmowały zawsze 3 znaki
+            // Daje to równe odstępy w pionie (ładną tabelkę)
+            o << setw(3) << m.pokaz(i, j) << " ";
         }
         o << endl;
     }

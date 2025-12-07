@@ -1,12 +1,11 @@
 #include "matrix.h"
 #include <iostream>
-#include <fstream>
+#include <fstream> // Potrzebne do zapisu do pliku
 #include <ctime>
 
 using namespace std;
 
 /// @brief Funkcja glowna programu testujacego klase matrix.
-/// Uruchamia wszystkie metody celem sprawdzenia poprawnosci.
 int main() {
     srand(static_cast<unsigned int>(time(NULL))); // Inicjalizacja generatora liczb losowych
 
@@ -23,7 +22,7 @@ int main() {
     m1.alokuj(10); // Powinno zwolnic stara i dac nowa
     m1.losuj();
 
-    // POPRAWKA TUTAJ: Odkomentowano wypisywanie macierzy
+    // Teraz wyœwietlamy macierz, która dziêki setw(3) bêdzie równa
     cout << m1;
 
     cout << "\n[TEST] Zmniejszenie do 3x3 (nie zwalnia pamieci, tylko zmienia n):" << endl;
@@ -35,17 +34,23 @@ int main() {
     cout << "\n[TEST] Test na n=30:" << endl;
     matrix mBig(30);
     mBig.losuj();
-    // Operacje na mBig...
-    cout << "Macierz 30x30 utworzona pomyslnie." << endl;
 
-    // Jeœli chcesz widzieæ te¿ tê du¿¹ macierz, odkomentuj liniê poni¿ej:
-    // cout << mBig << endl;
+    // ZAPIS DO PLIKU (¿eby nie psuæ widoku w konsoli)
+    cout << "Zapisuje macierz 30x30 do pliku 'wynik_matrix.txt'..." << endl;
+    ofstream plik("wynik_matrix.txt");
+    if (plik.is_open()) {
+        plik << mBig;
+        plik.close();
+        cout << "SUKCES: Sprawdz plik 'wynik_matrix.txt' w folderze projektu." << endl;
+    }
+    else {
+        cout << "BLAD: Nie udalo sie otworzyc pliku do zapisu." << endl;
+    }
 
     // --- 4. Miejsce na Wasze testy metod ---
     // Np. matrix m2(3); m2.szachownica(); cout << m2;
-    // Np. m1 + m2;
 
-    // Opcjonalne zatrzymanie konsoli (jeœli u¿ywasz Visual Studio i okno znika)
+    // Opcjonalne zatrzymanie konsoli
     // system("pause");
 
     return 0;
