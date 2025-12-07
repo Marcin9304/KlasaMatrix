@@ -43,7 +43,7 @@ matrix::~matrix(void) {
 // ZARZĄDZANIE PAMIĘCIĄ
 // =========================================================
 
-[cite_start]// Metoda alokuj (Kluczowa logika optymalizacji) [cite: 19-24]
+// Metoda alokuj (Kluczowa logika optymalizacji) [cite: 19-24]
 matrix& matrix::alokuj(int n) {
     if (n < 0) return *this;
     int req_size = n * n; // Wymagana wielkość
@@ -58,7 +58,7 @@ matrix& matrix::alokuj(int n) {
     else {
         // Sytuacja 2: Macierz już istnieje
         if (this->capacity < req_size) {
-            [cite_start]// [cite: 23] Pamięci jest za mało -> realokacja
+            // [cite: 23] Pamięci jest za mało -> realokacja
             data.reset(); // Zwolnij starą
             this->n = n;
             this->capacity = req_size;
@@ -66,7 +66,7 @@ matrix& matrix::alokuj(int n) {
             for (int i = 0; i < req_size; i++) data[i] = 0;
         }
         else {
-            [cite_start]// [cite: 24] Pamięci jest więcej lub tyle samo -> zostawiamy alokację
+            // [cite: 24] Pamięci jest więcej lub tyle samo -> zostawiamy alokację
             // Zmieniamy tylko logiczny wymiar n
             this->n = n;
             // capacity pozostaje bez zmian (stare, większe)
