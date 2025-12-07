@@ -2,21 +2,22 @@
 #include <cstdlib> // rand, srand
 #include <ctime>   // time
 #include <cmath>   // static_cast, floor
+#include <memory>  // make_unique (dodane dla poprawności kompilacji)
 
 // =========================================================
 // KONSTRUKTORY I DESTRUKTOR
 // =========================================================
 
-[cite_start]// Konstruktor domyślny [cite: 6-7]
+// Konstruktor domyślny
 matrix::matrix(void) : n(0), capacity(0), data(nullptr) {
 }
 
-[cite_start]// Konstruktor alokujący macierz n na n [cite: 8-10]
+// Konstruktor alokujący macierz n na n
 matrix::matrix(int n) : n(0), capacity(0), data(nullptr) {
     alokuj(n);
 }
 
-[cite_start]// Konstruktor alokujący i przepisujący dane z tabeli [cite: 11-13]
+// Konstruktor alokujący i przepisujący dane z tabeli
 matrix::matrix(int n, int* t) : n(0), capacity(0), data(nullptr) {
     alokuj(n);
     if (t != nullptr) {
@@ -26,7 +27,7 @@ matrix::matrix(int n, int* t) : n(0), capacity(0), data(nullptr) {
     }
 }
 
-[cite_start]// Konstruktor kopiujący (głęboka kopia) [cite: 14, 16]
+// Konstruktor kopiujący (głęboka kopia)
 matrix::matrix(matrix& m) : n(0), capacity(0), data(nullptr) {
     alokuj(m.n);
     for (int i = 0; i < n * n; i++) {
@@ -34,7 +35,7 @@ matrix::matrix(matrix& m) : n(0), capacity(0), data(nullptr) {
     }
 }
 
-[cite_start]// Destruktor [cite: 15, 17]
+// Destruktor
 matrix::~matrix(void) {
     // unique_ptr automatycznie zwalnia pamięć
 }
@@ -43,7 +44,7 @@ matrix::~matrix(void) {
 // ZARZĄDZANIE PAMIĘCIĄ
 // =========================================================
 
-// Metoda alokuj (Kluczowa logika optymalizacji) [cite: 19-24]
+// Metoda alokuj (Kluczowa logika optymalizacji)
 matrix& matrix::alokuj(int n) {
     if (n < 0) return *this;
     int req_size = n * n; // Wymagana wielkość
@@ -58,7 +59,7 @@ matrix& matrix::alokuj(int n) {
     else {
         // Sytuacja 2: Macierz już istnieje
         if (this->capacity < req_size) {
-            // [cite: 23] Pamięci jest za mało -> realokacja
+            // Pamięci jest za mało -> realokacja
             data.reset(); // Zwolnij starą
             this->n = n;
             this->capacity = req_size;
@@ -66,7 +67,7 @@ matrix& matrix::alokuj(int n) {
             for (int i = 0; i < req_size; i++) data[i] = 0;
         }
         else {
-            // [cite: 24] Pamięci jest więcej lub tyle samo -> zostawiamy alokację
+            // Pamięci jest więcej lub tyle samo -> zostawiamy alokację
             // Zmieniamy tylko logiczny wymiar n
             this->n = n;
             // capacity pozostaje bez zmian (stare, większe)
@@ -79,7 +80,7 @@ matrix& matrix::alokuj(int n) {
 // METODY DOSTĘPU I MODYFIKACJI
 // =========================================================
 
-[cite_start]// Wstawianie wartości [cite: 22]
+// Wstawianie wartości
 matrix& matrix::wstaw(int x, int y, int wartosc) {
     if (x >= 0 && x < n && y >= 0 && y < n) {
         data[x * n + y] = wartosc;
@@ -87,7 +88,7 @@ matrix& matrix::wstaw(int x, int y, int wartosc) {
     return *this;
 }
 
-[cite_start]// Pobieranie wartości [cite: 22, 24]
+// Pobieranie wartości
 int matrix::pokaz(int x, int y) {
     if (x >= 0 && x < n && y >= 0 && y < n) {
         return data[x * n + y];
@@ -95,7 +96,7 @@ int matrix::pokaz(int x, int y) {
     return 0; // Wartość błędu
 }
 
-[cite_start]// Transpozycja (odwrócenie) [cite: 23, 25]
+// Transpozycja (odwrócenie)
 matrix& matrix::dowroc(void) {
     auto temp = make_unique<int[]>(n * n);
     for (int i = 0; i < n; i++) {
@@ -111,7 +112,7 @@ matrix& matrix::dowroc(void) {
     return *this;
 }
 
-[cite_start]// Losowanie 0-9 [cite: 26-28]
+// Losowanie 0-9
 matrix& matrix::losuj(void) {
     for (int i = 0; i < n * n; i++) {
         data[i] = rand() % 10;
@@ -119,7 +120,7 @@ matrix& matrix::losuj(void) {
     return *this;
 }
 
-[cite_start]// Losowanie x elementów [cite: 29-32]
+// Losowanie x elementów
 matrix& matrix::losuj(int x) {
     // Czyścimy macierz przed losowaniem miejsc
     for (int i = 0; i < n * n; i++) data[i] = 0;
@@ -143,7 +144,7 @@ matrix& matrix::losuj(int x) {
 // METODY WYPEŁNIAJĄCE (Szablony)
 // =========================================================
 
-[cite_start]// Diagonalna [cite: 33-35]
+// Diagonalna
 matrix& matrix::diagonalna(int* t) {
     if (!t) return *this;
     for (int i = 0; i < n * n; i++) data[i] = 0;
@@ -153,7 +154,7 @@ matrix& matrix::diagonalna(int* t) {
     return *this;
 }
 
-[cite_start]// Diagonalna przesunięta o k [cite: 36-39]
+// Diagonalna przesunięta o k
 matrix& matrix::diagonalna_k(int k, int* t) {
     if (!t) return *this;
     for (int i = 0; i < n * n; i++) data[i] = 0;
@@ -168,7 +169,7 @@ matrix& matrix::diagonalna_k(int k, int* t) {
     return *this;
 }
 
-[cite_start]// Kolumna [cite: 40-41]
+// Kolumna
 matrix& matrix::kolumna(int x, int* t) {
     if (x >= 0 && x < n && t) {
         for (int i = 0; i < n; i++) {
@@ -178,7 +179,7 @@ matrix& matrix::kolumna(int x, int* t) {
     return *this;
 }
 
-[cite_start]// Wiersz [cite: 41-42]
+// Wiersz
 matrix& matrix::wiersz(int y, int* t) {
     if (y >= 0 && y < n && t) {
         for (int j = 0; j < n; j++) {
@@ -188,7 +189,7 @@ matrix& matrix::wiersz(int y, int* t) {
     return *this;
 }
 
-[cite_start]// Przekątna (1 na środku) [cite: 43-46]
+// Przekątna (1 na środku)
 matrix& matrix::przekatna(void) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -199,7 +200,7 @@ matrix& matrix::przekatna(void) {
     return *this;
 }
 
-[cite_start]// Pod przekątną [cite: 47]
+// Pod przekątną
 matrix& matrix::pod_przekatna(void) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -210,7 +211,7 @@ matrix& matrix::pod_przekatna(void) {
     return *this;
 }
 
-[cite_start]// Nad przekątną [cite: 52]
+// Nad przekątną
 matrix& matrix::nad_przekatna(void) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -221,7 +222,7 @@ matrix& matrix::nad_przekatna(void) {
     return *this;
 }
 
-[cite_start]// Szachownica [cite: 53-58]
+// Szachownica
 matrix& matrix::szachownica(void) {
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -237,7 +238,7 @@ matrix& matrix::szachownica(void) {
 // OPERATORY WEWNĘTRZNE (Modyfikują obiekt *this)
 // =========================================================
 
-[cite_start]// A + B [cite: 59-60]
+// A + B
 matrix& matrix::operator+(matrix& m) {
     if (this->n == m.n) {
         for (int i = 0; i < n * n; i++) {
@@ -247,7 +248,7 @@ matrix& matrix::operator+(matrix& m) {
     return *this;
 }
 
-[cite_start]// A * B (Mnożenie macierzowe) [cite: 61-62]
+// A * B (Mnożenie macierzowe)
 matrix& matrix::operator*(matrix& m) {
     if (this->n != m.n) return *this;
 
@@ -268,19 +269,19 @@ matrix& matrix::operator*(matrix& m) {
     return *this;
 }
 
-[cite_start]// A + int [cite: 63-64]
+// A + int
 matrix& matrix::operator+(int a) {
     for (int i = 0; i < n * n; i++) data[i] += a;
     return *this;
 }
 
-[cite_start]// A * int [cite: 65-66]
+// A * int
 matrix& matrix::operator*(int a) {
     for (int i = 0; i < n * n; i++) data[i] *= a;
     return *this;
 }
 
-[cite_start]// A - int [cite: 67-68]
+// A - int
 matrix& matrix::operator-(int a) {
     for (int i = 0; i < n * n; i++) data[i] -= a;
     return *this;
@@ -290,7 +291,7 @@ matrix& matrix::operator-(int a) {
 // OPERATORY FRIEND (Zewnętrzne - tworzą nową macierz)
 // =========================================================
 
-[cite_start]// int + A [cite: 70-71]
+// int + A
 matrix operator+(int a, matrix& m) {
     matrix wynik(m.n);
     // Dostęp do m.n i m.pokaz jest możliwy (friend)
@@ -302,7 +303,7 @@ matrix operator+(int a, matrix& m) {
     return wynik;
 }
 
-[cite_start]// int * A [cite: 72-73]
+// int * A
 matrix operator*(int a, matrix& m) {
     matrix wynik(m.n);
     for (int i = 0; i < m.n; i++) {
@@ -313,7 +314,7 @@ matrix operator*(int a, matrix& m) {
     return wynik;
 }
 
-[cite_start]// int - A [cite: 74-75]
+// int - A
 matrix operator-(int a, matrix& m) {
     matrix wynik(m.n);
     for (int i = 0; i < m.n; i++) {
@@ -328,24 +329,24 @@ matrix operator-(int a, matrix& m) {
 // POZOSTAŁE OPERATORY
 // =========================================================
 
-[cite_start]// A++ [cite: 76-78]
+// A++
 matrix& matrix::operator++(int) {
     for (int i = 0; i < n * n; i++) data[i]++;
     return *this;
 }
 
-[cite_start]// A-- [cite: 79-81]
+// A--
 matrix& matrix::operator--(int) {
     for (int i = 0; i < n * n; i++) data[i]--;
     return *this;
 }
 
-[cite_start]// Przypisania złożone [cite: 82-87]
+// Przypisania złożone
 matrix& matrix::operator+=(int a) { return *this + a; }
 matrix& matrix::operator-=(int a) { return *this - a; }
 matrix& matrix::operator*=(int a) { return *this * a; }
 
-[cite_start]// Operator funkcyjny (część całkowita z double) [cite: 88-90]
+// Operator funkcyjny (część całkowita z double)
 matrix& matrix::operator()(double a) {
     int val = static_cast<int>(a);
     for (int i = 0; i < n * n; i++) data[i] += val;
@@ -356,7 +357,7 @@ matrix& matrix::operator()(double a) {
 // OPERATORY PORÓWNANIA
 // =========================================================
 
-[cite_start]// A == B [cite: 92-95]
+// A == B
 bool matrix::operator==(const matrix& m) {
     if (n != m.n) return false;
     for (int i = 0; i < n * n; i++) {
@@ -365,7 +366,7 @@ bool matrix::operator==(const matrix& m) {
     return true;
 }
 
-[cite_start]// A > B [cite: 101]
+// A > B
 bool matrix::operator>(const matrix& m) {
     if (n != m.n) return false;
     // Warunek: KAŻDY element musi być większy
@@ -375,7 +376,7 @@ bool matrix::operator>(const matrix& m) {
     return true;
 }
 
-[cite_start]// A < B [cite: 102-103]
+// A < B
 bool matrix::operator<(const matrix& m) {
     if (n != m.n) return false;
     // Warunek: KAŻDY element musi być mniejszy
@@ -389,7 +390,7 @@ bool matrix::operator<(const matrix& m) {
 // OPERATOR STRUMIENIOWY
 // =========================================================
 
-[cite_start]// Wypisanie macierzy [cite: 91]
+// Wypisanie macierzy
 ostream& operator<<(ostream& o, matrix& m) {
     for (int i = 0; i < m.n; i++) {
         for (int j = 0; j < m.n; j++) {
